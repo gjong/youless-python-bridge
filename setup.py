@@ -6,5 +6,7 @@ setup(name='youless_python_bridge',
       url='',
       author='G. Jongerius'
       license='MIT',
+      test_suite='nose.collector',
+      test_require=['nose'],
       packages=['youless_python_bridge'],
       zip_safe=False)

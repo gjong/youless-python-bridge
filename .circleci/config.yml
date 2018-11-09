@@ -38,4 +38,14 @@ jobs:
           paths:
             - ./venv
           key: v1-dependencies-{{ checksum "requirements.txt" }}
-        
+       
+      - run:
+          name: run tests
+          command: |
+            . venv/bin/activate
+            python setup.py test
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: trl
