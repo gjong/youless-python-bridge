@@ -1,8 +1,11 @@
 """
 This file contains a helper class to easily obtain data from the YouLess sensor.
 """
+
 import json
 from urllib.request import urlopen
+
+name = "youless_pyhton_bridge"
 
 
 class YoulessData:
