@@ -44,8 +44,16 @@ jobs:
           command: |
             . venv/bin/activate
             python setup.py test
+
+      - run:
+          name: dist
+          command: |
+            . venv/bin/activate
+            python setup.py sdist bdist_wheel
+
       - store_test_results:
           path: test-results
+
       - store_artifacts:
-          path: test-results
+          path: dist
           destination: trl
