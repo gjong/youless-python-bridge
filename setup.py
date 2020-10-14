@@ -4,7 +4,7 @@ with open("README.md", "r") as fh:
     long_description = fh.read()
 
 setuptools.setup(
-      name='youless_python_bridge',
+      name='youless_api',
       version='0.1',
       description='A bridge for python to the YouLess sensor',
       long_description=long_description,
