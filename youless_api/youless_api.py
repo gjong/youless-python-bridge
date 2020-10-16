@@ -15,13 +15,25 @@ class YoulessAPI:
 
     def __init__(self, host):
         """Initialize the data bridge."""
-        self._url = 'http://' + host + '/e'
+        self._url = 'http://' + host + '/'
         self._cache = None
+        self._device = json.loads(urlopen(f"{self._url}d")
+                                  .read()
+                                  .decode('utf-8'))
 
     def update(self):
         """Fetch the latest settings from the Youless Sensor."""
-        raw_json = urlopen(self._url)
-        self._cache = json.loads(raw_json.read().decode('utf-8'))[0]
+        self._cache = json.loads(urlopen(f"{self._url}e")
+                                 .read()
+                                 .decode('utf-8'))[0]
+
+    @property
+    def mac_address(self):
+        return self._device['mac']
+
+    @property
+    def model(self):
+        return self._device['model']
 
     @property
     def gas_meter(self):
