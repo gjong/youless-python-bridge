@@ -1,5 +1,5 @@
 # YouLess Python Data Bridge
-[![PyPI version](https://badge.fury.io/py/youless-python-bridge.svg)](https://badge.fury.io/py/youless-python-bridge)
+[![PyPI version](https://badge.fury.io/py/youless-api.svg)](https://badge.fury.io/py/youless-api)
 
 This package contains support classes to fetch data from the YouLess sensors.
 
