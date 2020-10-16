@@ -17,6 +17,9 @@ class YoulessAPI:
         """Initialize the data bridge."""
         self._url = 'http://' + host + '/'
         self._cache = None
+        self._device = None
+
+    def initialize(self):
         self._device = json.loads(urlopen(f"{self._url}d")
                                   .read()
                                   .decode('utf-8'))
@@ -29,11 +32,17 @@ class YoulessAPI:
 
     @property
     def mac_address(self):
-        return self._device['mac']
+        if self._device is not None:
+            return self._device['mac']
+
+        return None
 
     @property
     def model(self):
-        return self._device['model']
+        if self._device is not None:
+            return self._device['model']
+
+        return None
 
     @property
     def gas_meter(self):
