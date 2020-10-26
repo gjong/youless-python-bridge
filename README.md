@@ -3,6 +3,14 @@
 
 This package contains support classes to fetch data from the YouLess sensors.
 
+## Contributing
+
+To request new features or report bugs please use:
+
+    https://jongsoftdev.atlassian.net/jira/software/c/projects/YA/issues/
+
+## Using the python integration
+
 To use the API use the following code:
 
 ```python
