@@ -56,7 +56,7 @@ class YoulessAPI:
     def current_power_usage(self):
         """Get the current power usage."""
         if self._cache is not None:
-            return YoulessSensor(self._cache['pwr'], 'kW')
+            return YoulessSensor(self._cache['pwr'], 'W')
 
         return None
 
