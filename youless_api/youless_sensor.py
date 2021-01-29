@@ -22,3 +22,54 @@ class YoulessSensor:
     def value(self):
         """Get the current value"""
         return self._value
+
+
+class PowerMeter:
+
+    def __init__(self, low: YoulessSensor, high: YoulessSensor,
+                 total: YoulessSensor):
+        self._low = low
+        self._high = high
+        self._total = total
+
+    @property
+    def low(self):
+        return self._low
+
+    @property
+    def high(self):
+        return self._high
+
+    @property
+    def total(self):
+        return self._total
+
+
+class DeliveryMeter:
+
+    def __init__(self, low: YoulessSensor, high: YoulessSensor):
+        self._low = low
+        self._high = high
+
+    @property
+    def low(self):
+        return self._low
+
+    @property
+    def high(self):
+        return self._high
+
+
+class ExtraMeter:
+
+    def __init__(self, total: YoulessSensor, current: YoulessSensor):
+        self._total = total
+        self._current = current
+
+    def current(self) -> YoulessSensor:
+        return self._current
+
+    def total(self) -> YoulessSensor:
+        return self._total
+
+

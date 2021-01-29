@@ -9,7 +9,3 @@ class TestYoulessData(unittest.TestCase):
         value = YoulessSensor(1.232, "w")
         self.assertTrue(value.value == 1.232)
         self.assertTrue(value.unit_of_measurement == "w")
-
-
-if __name__ == '__main__':
-    unittest.main()
