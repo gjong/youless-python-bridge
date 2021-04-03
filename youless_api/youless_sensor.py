@@ -62,12 +62,12 @@ class DeliveryMeter:
 
 class ExtraMeter:
 
-    def __init__(self, total: YoulessSensor, current: YoulessSensor):
+    def __init__(self, total: YoulessSensor, usage: YoulessSensor):
         self._total = total
-        self._current = current
+        self._usage = usage
 
-    def current(self) -> YoulessSensor:
-        return self._current
+    def usage(self) -> YoulessSensor:
+        return self._usage
 
     def total(self) -> YoulessSensor:
         return self._total
