@@ -115,10 +115,10 @@ class LS120(YouLessDevice):
     def extra_meter(self):
         """Get the meter values of an attached meter."""
         if self._cache is not None:
-            return {
-                'total': YoulessSensor(self._cache['cs0'], 'kWh'),
-                'current': YoulessSensor(self._cache['ps0'], 'kWh')
-            }
+            return ExtraMeter(
+                YoulessSensor(self._cache['cs0'], 'kWh'),
+                YoulessSensor(self._cache['ps0'], 'W')
+            )
 
         return None
 
