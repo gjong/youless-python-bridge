@@ -34,7 +34,7 @@ class LS120Tests(unittest.TestCase):
                 "n1": 0.029,
                 "n2": 0.000,
                 "gas": 1624.264,
-                "gts": int(datetime.datetime.now().strftime("%y%m%d%h00"))
+                "gts": int(datetime.datetime.now().strftime("%y%m%d%H00"))
             }]
 
             api = LS120('', {})
