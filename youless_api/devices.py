@@ -6,6 +6,18 @@ from youless_api.const import STATE_OK, STATE_FAILED
 from youless_api.youless_sensor import YoulessSensor, PowerMeter, DeliveryMeter, ExtraMeter
 
 
+def validate_enologic_response(raw_data: dict) -> dict:
+    """Validate the response to verify that it makes sense and no junk data is returned"""
+    if 'gts' in raw_data:
+        formatted_date = datetime.datetime.now().strftime("%y%m%d") + "0000"
+        if int(formatted_date) < raw_data["gts"]:
+            return raw_data
+    else:
+        return raw_data
+    
+    return None
+
+
 class YouLessDevice:
     """The base class for the Youless devices"""
 
@@ -144,11 +156,15 @@ class LS120(YouLessDevice):
         """Update the sensor values from the device"""
         response = requests.get(f"{self._host}/e")
         if response.ok:
-            self._state = STATE_OK
-            self._cache = response.json()[0]
+            response = validate_enologic_response(response.json()[0])
+            if response is not None:
+                self._state = STATE_OK
+                self._cache = response
+            else:
+                self._state = STATE_FAILED
         else:
             self._state = STATE_FAILED
-
+    
 
 class LS110(YouLessDevice):
     """The device integration for the Youless LS110"""
