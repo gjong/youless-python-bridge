@@ -1,4 +1,6 @@
 import unittest
+import datetime
+
 from unittest.mock import patch, Mock
 from youless_api.devices import LS120, LS110
 from youless_api.const import STATE_OK, STATE_FAILED
@@ -32,7 +34,7 @@ class LS120Tests(unittest.TestCase):
                 "n1": 0.029,
                 "n2": 0.000,
                 "gas": 1624.264,
-                "gts": 2101291505
+                "gts": int(datetime.datetime.now().strftime("%y%m%d%h00"))
             }]
 
             api = LS120('', {})
@@ -46,6 +48,30 @@ class LS120Tests(unittest.TestCase):
         self.assertEqual(api.gas_meter.value, 1624.264)
         self.assertEqual(api.delivery_meter.high.value, 0.000)
         self.assertEqual(api.delivery_meter.low.value, 0.029)
+        
+    def test_ls120_stale(self):
+        """Test case for incident with stale data from the API"""
+        with patch('youless_api.devices.requests.get') as mock_get:
+            mock_get.return_value = Mock(ok=True)
+            mock_get.return_value.json.return_value = [{
+                "tm": 1611929119,
+                "net": 9194.164,
+                "pwr": 2382,
+                "ts0": 1608654000,
+                "cs0": 0.000,
+                "ps0": 0,
+                "p1": 4703.562,
+                "p2": 4490.631,
+                "n1": 0.029,
+                "n2": 0.000,
+                "gas": 1624.264,
+                "gts": 3894900
+            }]
+
+            api = LS120('', {})
+            api.update()
+
+        self.assertEqual(api.state, STATE_FAILED)
 
 
 class LS110Test(unittest.TestCase):
