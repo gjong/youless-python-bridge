@@ -155,7 +155,7 @@ class LS120(YouLessDevice):
 
     def update(self) -> None:
         """Update the sensor values from the device"""
-        response = requests.get(f"{self._host}/e")
+        response = requests.get(f"{self._host}/e", timeout=2)
         if response.ok:
             response = validate_enologic_response(response.json()[0])
             if response is not None:
@@ -209,7 +209,7 @@ class LS110(YouLessDevice):
 
     def update(self) -> None:
         """Update the sensor values from the device"""
-        response = requests.get(f"{self._host}/a?f=j")
+        response = requests.get(f"{self._host}/a?f=j", timeout=2)
         if response.ok:
             self._state = STATE_OK
             self._cache = response.json()
