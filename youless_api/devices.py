@@ -11,7 +11,7 @@ def validate_enologic_response(raw_data: dict) -> dict:
     """Validate the response to verify that it makes sense and no junk data is returned"""
     if 'gts' in raw_data:
         formatted_date = datetime.datetime.now().strftime("%y%m%d") + "0000"
-        if int(formatted_date) < raw_data["gts"]:
+        if raw_data["gts"] == 0 or int(formatted_date) < raw_data["gts"]:
             return raw_data
     else:
         return raw_data
