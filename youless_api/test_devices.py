@@ -19,7 +19,7 @@ class LS120Tests(unittest.TestCase):
         self.assertEqual(api.state, STATE_FAILED)
 
     def test_ls120_ok(self):
-        """Test the update functionality"""
+        """Test the update functionality."""
         with patch('youless_api.devices.requests.get') as mock_get:
             mock_get.return_value = Mock(ok=True)
             mock_get.return_value.json.return_value = [{
@@ -72,6 +72,28 @@ class LS120Tests(unittest.TestCase):
             api.update()
 
         self.assertEqual(api.state, STATE_FAILED)
+
+    def test_ls120_missing_p_and_n(self):
+        """Test case for incident with missing sensors from the API"""
+        with patch('youless_api.devices.requests.get') as mock_get:
+            mock_get.return_value = Mock(ok=True)
+            mock_get.return_value.json.return_value = [{
+                "tm": 1611929119,
+                "net": 9194.164,
+                "pwr": 2382,
+                "ts0": 1608654000,
+                "cs0": 0.000,
+                "ps0": 0,
+                "gas": 1624.264,
+                "gts": int(datetime.datetime.now().strftime("%y%m%d%H00"))
+            }]
+
+            api = LS120('', {})
+            api.update()
+
+        self.assertEqual(api.state, STATE_OK)
+        self.assertEqual(api.power_meter.high.value, 0)
+        self.assertEqual(api.power_meter.low.value, 0)
 
 
 class LS110Test(unittest.TestCase):
