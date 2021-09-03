@@ -3,6 +3,7 @@
 This file contains the sensor class for the youless API
 
 """
+from pyparsing import Or
 
 
 class YoulessSensor:

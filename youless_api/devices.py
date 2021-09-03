@@ -51,7 +51,7 @@ class YouLessDevice:
         return None
 
     @property
-    def current_power_usage(self):
+    def current_power_usage(self) -> Optional[YoulessSensor]:
         """Get the current power usage."""
         return None
 

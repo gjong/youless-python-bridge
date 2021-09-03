@@ -6,7 +6,7 @@ from typing import Optional
 import requests
 
 from youless_api.devices import LS120, LS110, YouLessDevice
-from youless_api.youless_sensor import YoulessSensor, PowerMeter
+from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter
 
 name = "youless_api"
 
@@ -16,18 +16,22 @@ class YoulessAPI:
 
     _device: Optional[YouLessDevice]
 
-    def __init__(self, host):
+    def __init__(self, host, username= None, password= None):
         """Initialize the data bridge."""
         self._url = 'http://' + host
+        if username is None:
+            self._authentication = None
+        else:
+            self._authentication = (username, password)
         self._device = None
 
     def initialize(self):
         """Establish a connection to the remote device"""
-        response = requests.get(f"{self._url}/d")
+        response = requests.get(f"{self._url}/d", auth=self._authentication)
         if response.ok:
             self._device = LS120(self._url, response.json())
         else:
-            alive = requests.get(self._url)
+            alive = requests.get(self._url, auth=self._authentication)
             if alive.ok:
                 self._device = LS110(self._url)
 
@@ -37,7 +41,7 @@ class YoulessAPI:
             self._device.update()
 
     @property
-    def mac_address(self):
+    def mac_address(self) -> Optional[str]:
         """Get the MAC address of the connected device."""
         if self._device is not None:
             return self._device.mac_address
@@ -45,7 +49,7 @@ class YoulessAPI:
         return None
 
     @property
-    def model(self):
+    def model(self) -> Optional[str]:
         """Return the model of the connected device."""
         if self._device is not None:
             return self._device.model
@@ -53,7 +57,7 @@ class YoulessAPI:
         return None
 
     @property
-    def gas_meter(self):
+    def gas_meter(self) -> Optional[YoulessSensor]:
         """"Get the gas data available."""
         if self._device is not None:
             return self._device.gas_meter
@@ -61,7 +65,7 @@ class YoulessAPI:
         return None
 
     @property
-    def current_power_usage(self):
+    def current_power_usage(self) -> Optional[YoulessSensor]:
         """Get the current power usage."""
         if self._device is not None:
             return self._device.current_power_usage
@@ -69,7 +73,7 @@ class YoulessAPI:
         return None
 
     @property
-    def power_meter(self):
+    def power_meter(self) -> Optional[PowerMeter]:
         """Get the power meter values."""
         if self._device is not None:
             return self._device.power_meter
@@ -77,7 +81,7 @@ class YoulessAPI:
         return None
 
     @property
-    def delivery_meter(self):
+    def delivery_meter(self) -> Optional[DeliveryMeter]:
         """Get the power delivered values."""
         if self._device is not None:
             return self._device.delivery_meter
@@ -85,9 +89,14 @@ class YoulessAPI:
         return None
 
     @property
-    def extra_meter(self):
+    def extra_meter(self) -> Optional[ExtraMeter]:
         """Get the meter values of an attached meter."""
         if self._device is not None:
             return self._device.extra_meter
 
         return None
+
+    @property
+    def secured(self) -> bool:
+        """Flag indicating if the API has authentication or not."""
+        return self._authentication is not None
