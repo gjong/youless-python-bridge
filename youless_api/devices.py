@@ -194,7 +194,7 @@ class LS110(YouLessDevice):
             return PowerMeter(
                 YoulessSensor(None, None),
                 YoulessSensor(None, None),
-                YoulessSensor(float(self._cache['cnt']), 'kWh')
+                YoulessSensor(self._cache['cnt'], 'kWh')
             )
 
         return None
