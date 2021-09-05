@@ -66,9 +66,11 @@ class ExtraMeter:
         self._total = total
         self._usage = usage
 
+    @property
     def usage(self) -> YoulessSensor:
         return self._usage
 
+    @property
     def total(self) -> YoulessSensor:
         return self._total
 
