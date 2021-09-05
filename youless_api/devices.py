@@ -10,7 +10,7 @@ from youless_api.youless_sensor import YoulessSensor, PowerMeter, DeliveryMeter,
 def validate_enologic_response(raw_data: dict) -> dict:
     """Validate the response to verify that it makes sense and no junk data is returned"""
 
-    corrected = {**{'p1': 0, 'p2': 0, 'n1': 0, 'n2': 0, 'gas': 0}, **raw_data}
+    corrected = {**{'p1': None, 'p2': None, 'n1': None, 'n2': None, 'gas': None}, **raw_data}
     if 'gts' in corrected:
         formatted_date = datetime.datetime.now().strftime("%y%m%d") + "0000"
         if corrected["gts"] != 0 and int(formatted_date) >= corrected["gts"]:
@@ -165,7 +165,7 @@ class LS120(YouLessDevice):
                 self._state = STATE_FAILED
         else:
             self._state = STATE_FAILED
-    
+
 
 class LS110(YouLessDevice):
     """The device integration for the Youless LS110"""
@@ -194,7 +194,7 @@ class LS110(YouLessDevice):
             return PowerMeter(
                 YoulessSensor(None, None),
                 YoulessSensor(None, None),
-                YoulessSensor(self._cache['cnt'], 'W')
+                YoulessSensor(float(self._cache['cnt']), 'kWh')
             )
 
         return None
@@ -207,8 +207,47 @@ class LS110(YouLessDevice):
 
         return None
 
+    @property
+    def extra_meter(self):
+        """Get the meter values of an attached meter."""
+        if self._cache is not None:
+            return ExtraMeter(
+                YoulessSensor(self._cache['cs0'], 'kWh'),
+                YoulessSensor(self._cache['ps0'], 'W')
+            )
+
+        return None
+
     def update(self) -> None:
         """Update the sensor values from the device"""
+        response = requests.get(f"{self._host}/a?f=j", timeout=2)
+        if response.ok:
+            self._state = STATE_OK
+            self._cache = response.json()
+        else:
+            self._state = STATE_FAILED
+
+
+class LS120PVOutput(LS110):
+
+    def __init__(self, host, device_information):
+        super(LS120PVOutput, self).__init__(host)
+        self._info = device_information
+
+    @property
+    def model(self) -> Optional[str]:
+        return "LS120 - PVOutput"
+
+    @property
+    def mac_address(self) -> Optional[str]:
+        """Return the MAC address"""
+        if self._info is not None:
+            return self._info['mac']
+
+        return None
+
+    def update(self) -> None:
+        """Update the sensor cache values using the /a?f=j end point."""
         response = requests.get(f"{self._host}/a?f=j", timeout=2)
         if response.ok:
             self._state = STATE_OK
