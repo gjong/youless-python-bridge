@@ -1,3 +1,10 @@
+# Release notes - YouLess API - Version 0.13
+
+### Feature
+
+[YA-11](https://jongsoftdev.atlassian.net/browse/YA-11) Add support for PVOutput firmware on LS120
+
+
 # Release notes - YouLess API - Version 0.12
 
 ### Bug
