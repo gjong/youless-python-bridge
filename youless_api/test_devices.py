@@ -151,8 +151,8 @@ class LS120Tests(unittest.TestCase):
             api.update()
 
         self.assertEqual(api.state, STATE_OK)
-        self.assertEqual(api.power_meter.high.value, 0)
-        self.assertEqual(api.power_meter.low.value, 0)
+        self.assertEqual(api.power_meter.high.value, None)
+        self.assertEqual(api.power_meter.low.value, None)
 
     @patch('youless_api.devices.requests.get', side_effect=mock_ls120_pvoutput)
     def test_ls120_pvoutput_firmware(self, mock_get):
@@ -187,6 +187,6 @@ class LS110Test(unittest.TestCase):
         self.assertEqual(api.state, STATE_OK)
         self.assertEqual(api.power_meter.high.value, None)
         self.assertEqual(api.power_meter.low.value, None)
-        self.assertEqual(api.power_meter.total.unit_of_measurement, "W")
+        self.assertEqual(api.power_meter.total.unit_of_measurement, "kWh")
         self.assertEqual(api.power_meter.total.value, "141950,625")
         self.assertEqual(api.current_power_usage.value, 750)
