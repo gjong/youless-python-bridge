@@ -14,7 +14,7 @@ def validate_enologic_response(raw_data: dict) -> dict:
     if 'gts' in corrected:
         formatted_date = datetime.datetime.now().strftime("%y%m%d") + "0000"
         if corrected["gts"] != 0 and int(formatted_date) >= corrected["gts"]:
-            corrected = None
+            corrected["gas"] = None
 
     return corrected
 
