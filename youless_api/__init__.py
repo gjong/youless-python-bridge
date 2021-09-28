@@ -5,7 +5,7 @@ from typing import Optional
 
 import requests
 
-from youless_api.devices import LS120, LS110, YouLessDevice
+from youless_api.devices import LS120, LS110, YouLessDevice, LS120PVOutput
 from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter
 
 name = "youless_api"
@@ -27,11 +27,15 @@ class YoulessAPI:
 
     def initialize(self):
         """Establish a connection to the remote device"""
-        response = requests.get(f"{self._url}/d", auth=self._authentication)
+        response = requests.get(f"{self._url}/d", auth=self._authentication, timeout=2)
         if response.ok:
-            self._device = LS120(self._url, response.json())
+            firmware_check = requests.get(f"{self._url}/e", auth=self._authentication, timeout=2)
+            if firmware_check.ok and firmware_check.headers['Content-Type'] == 'application/json':
+                self._device = LS120(self._url, response.json())
+            else:
+                self._device = LS120PVOutput(self._url, response.json())
         else:
-            alive = requests.get(self._url, auth=self._authentication)
+            alive = requests.get(self._url, auth=self._authentication, timeout=2)
             if alive.ok:
                 self._device = LS110(self._url)
 

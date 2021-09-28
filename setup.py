@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='youless_api',
-      version='0.12',
+      version='0.13',
       description='A bridge for python to the YouLess sensor',
       long_description=long_description,
       long_description_content_type="text/markdown",
@@ -14,5 +14,5 @@ setuptools.setup(
       license='MIT',
       test_suite='nose.collector',
       tests_require=['nose'],
-      packages=setuptools.find_packages(),
+      packages=setuptools.find_packages(exclude=("test_",)),
       zip_safe=False)

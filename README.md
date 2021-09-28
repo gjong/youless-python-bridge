@@ -19,6 +19,7 @@ from youless_api.youless_api import YoulessAPI
 
 if __name__ == '__main__':
     api = YoulessAPI("192.168.1.2")  # use the ip address of the youless device
+    api.initialize()
     api.update()
 
     gasUsage = api.gas_meter.value
