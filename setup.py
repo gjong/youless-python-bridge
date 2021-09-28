@@ -14,5 +14,5 @@ setuptools.setup(
       license='MIT',
       test_suite='nose.collector',
       tests_require=['nose'],
-      packages=setuptools.find_packages(),
+      packages=setuptools.find_packages(exclude=("test_",)),
       zip_safe=False)

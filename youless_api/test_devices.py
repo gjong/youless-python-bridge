@@ -108,7 +108,7 @@ class LS120Tests(unittest.TestCase):
         self.assertEqual(api.delivery_meter.high.value, 0.000)
         self.assertEqual(api.delivery_meter.low.value, 0.029)
 
-    def test_ls120_stale(self):
+    def test_ls120_gas_stale(self):
         """Test case for incident with stale data from the API"""
         with patch('youless_api.devices.requests.get') as mock_get:
             mock_get.return_value = Mock(ok=True)
@@ -130,7 +130,8 @@ class LS120Tests(unittest.TestCase):
             api = LS120('', {})
             api.update()
 
-        self.assertEqual(api.state, STATE_FAILED)
+        self.assertEqual(api.state, STATE_OK)
+        self.assertIsNone(api.gas_meter.value)
 
     def test_ls120_missing_p_and_n(self):
         """Test case for incident with missing sensors from the API"""
