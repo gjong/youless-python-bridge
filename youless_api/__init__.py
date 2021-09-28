@@ -16,7 +16,7 @@ class YoulessAPI:
 
     _device: Optional[YouLessDevice]
 
-    def __init__(self, host, username= None, password= None):
+    def __init__(self, host, username=None, password=None):
         """Initialize the data bridge."""
         self._url = 'http://' + host
         if username is None:
