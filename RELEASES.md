@@ -1,3 +1,9 @@
+# Release notes - YouLess API - Version 0.14
+
+### Bug-fix
+
+Fix issue in the LS110 device with older firmware not exposing the 'cs0' or 'ps0' sensors in the JSON
+
 # Release notes - YouLess API - Version 0.13
 
 ### Feature
