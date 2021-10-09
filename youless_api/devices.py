@@ -19,6 +19,14 @@ def validate_enologic_response(raw_data: dict) -> dict:
     return corrected
 
 
+def validate_basic_response(raw_data: dict) -> dict:
+    """Validate the response from the old /a interface and adjust the dict if needed."""
+
+    corrected = {**{'cs0': None, 'ps0': None}, **raw_data}
+
+    return corrected
+
+
 class YouLessDevice:
     """The base class for the Youless devices"""
 
@@ -222,8 +230,9 @@ class LS110(YouLessDevice):
         """Update the sensor values from the device"""
         response = requests.get(f"{self._host}/a?f=j", timeout=2)
         if response.ok:
+            validated_response = validate_basic_response(response.json())
             self._state = STATE_OK
-            self._cache = response.json()
+            self._cache = validated_response
         else:
             self._state = STATE_FAILED
 
