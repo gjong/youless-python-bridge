@@ -1,3 +1,13 @@
+# Release notes - YouLess API - Version 0.15
+
+### Bug
+
+[YA-12](https://jongsoftdev.atlassian.net/browse/YA-12) Fix incorrect values for LS110
+
+### Feature
+
+[YA-3](https://jongsoftdev.atlassian.net/browse/YA-3) Add support for YouLess devices with authentication
+
 # Release notes - YouLess API - Version 0.14
 
 ### Bug-fix
