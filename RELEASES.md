@@ -1,5 +1,7 @@
 # Release notes - YouLess API - Version 0.15
 
+[Code changes](https://bitbucket.org/jongsoftdev/youless-python-bridge/branches/compare/0.15%0D0.14#diff)
+
 ### Bug
 
 [YA-12](https://jongsoftdev.atlassian.net/browse/YA-12) Fix incorrect values for LS110
@@ -10,11 +12,15 @@
 
 # Release notes - YouLess API - Version 0.14
 
+[Code changes](https://bitbucket.org/jongsoftdev/youless-python-bridge/branches/compare/0.14%0D0.13#diff)
+
 ### Bug-fix
 
 Fix issue in the LS110 device with older firmware not exposing the 'cs0' or 'ps0' sensors in the JSON
 
 # Release notes - YouLess API - Version 0.13
+
+[Code changes](https://bitbucket.org/jongsoftdev/youless-python-bridge/branches/compare/0.13%0D0.12#diff)
 
 ### Feature
 
