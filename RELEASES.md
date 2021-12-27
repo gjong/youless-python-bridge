@@ -1,3 +1,11 @@
+# Release notes - YouLess API - Version 0.16
+
+[Code changes](https://bitbucket.org/jongsoftdev/youless-python-bridge/branches/compare/0.16%0D0.15#diff)
+
+### Bug
+
+[YA-13](https://jongsoftdev.atlassian.net/browse/YA-13) Youless PVOutput error in extra meter
+
 # Release notes - YouLess API - Version 0.15
 
 [Code changes](https://bitbucket.org/jongsoftdev/youless-python-bridge/branches/compare/0.15%0D0.14#diff)
