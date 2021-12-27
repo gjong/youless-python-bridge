@@ -161,8 +161,9 @@ class LS120Tests(unittest.TestCase):
         api.update()
 
         self.assertEqual(api.current_power_usage.value, -930)
+        self.assertEqual(api.power_meter.total.value, 16600.536)
         self.assertEqual(api.extra_meter.usage.value, 1288)
-        self.assertEqual(api.extra_meter.total.value, " 3021,525")
+        self.assertEqual(api.extra_meter.total.value, 3021.525)
         self.assertEqual(api.extra_meter.usage.value, 1288)
 
 

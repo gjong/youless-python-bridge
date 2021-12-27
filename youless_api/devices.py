@@ -23,6 +23,11 @@ def validate_basic_response(raw_data: dict) -> dict:
     """Validate the response from the old /a interface and adjust the dict if needed."""
 
     corrected = {**{'cs0': None, 'ps0': None}, **raw_data}
+    parse_float_values_for = ['cnt', 'cs0']
+
+    for correct_value in parse_float_values_for:
+        if correct_value in corrected and corrected[correct_value] is not None:
+            corrected[correct_value] = float(corrected[correct_value].replace(",", "."))
 
     return corrected
 
@@ -202,7 +207,7 @@ class LS110(YouLessDevice):
             return PowerMeter(
                 YoulessSensor(None, None),
                 YoulessSensor(None, None),
-                YoulessSensor(float(self._cache['cnt'].replace(",", ".")), 'kWh')
+                YoulessSensor(self._cache['cnt'], 'kWh')
             )
 
         return None
@@ -254,12 +259,3 @@ class LS120PVOutput(LS110):
             return self._info['mac']
 
         return None
-
-    def update(self) -> None:
-        """Update the sensor cache values using the /a?f=j end point."""
-        response = requests.get(f"{self._host}/a?f=j", timeout=2)
-        if response.ok:
-            self._state = STATE_OK
-            self._cache = response.json()
-        else:
-            self._state = STATE_FAILED
