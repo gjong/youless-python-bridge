@@ -5,7 +5,7 @@ import requests
 
 from youless_api.const import STATE_OK, STATE_FAILED
 from youless_api.device import YouLessDevice
-from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter
+from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter, Phase
 
 
 def validate_enologic_response(raw_data: dict) -> dict:
@@ -19,6 +19,14 @@ def validate_enologic_response(raw_data: dict) -> dict:
 
     return corrected
 
+def supports_phases(firmware: Optional[str]) -> bool:
+    """Determine if the provided firmware supports phase information."""
+    if firmware is not None:
+        major_ver = float(firmware[0:3])
+        return major_ver >= 1.5
+
+    return False
+
 
 class LS120(YouLessDevice):
     """The device integration for the Youless LS120"""
@@ -28,8 +36,10 @@ class LS120(YouLessDevice):
         super().__init__()
         self._host = host
         self._cache = None
+        self._phases = None
         self._state = STATE_OK
         self._info = device_information
+        self._phase_support = supports_phases(device_information.get('fw', None))
 
     @property
     def gas_meter(self):
@@ -107,6 +117,36 @@ class LS120(YouLessDevice):
 
         return None
 
+    @property
+    def phase1(self) -> Optional[Phase]:
+        if self._phases is not None:
+            return Phase(
+                YoulessSensor(self._phases['i1'], ''),
+                YoulessSensor(self._phases['v1'], ''),
+                YoulessSensor(self._phases['l1'], ''))
+
+        return None
+
+    @property
+    def phase2(self) -> Optional[Phase]:
+        if self._phases is not None:
+            return Phase(
+                YoulessSensor(self._phases['i2'], ''),
+                YoulessSensor(self._phases['v2'], ''),
+                YoulessSensor(self._phases['l2'], ''))
+
+        return None
+
+    @property
+    def phase3(self) -> Optional[Phase]:
+        if self._phases is not None:
+            return Phase(
+                YoulessSensor(self._phases['i3'], ''),
+                YoulessSensor(self._phases['v3'], ''),
+                YoulessSensor(self._phases['l3'], ''))
+
+        return None
+
     def update(self) -> None:
         """Update the sensor values from the device"""
         response = requests.get(f"{self._host}/e", timeout=2)
@@ -119,3 +159,8 @@ class LS120(YouLessDevice):
                 self._state = STATE_FAILED
         else:
             self._state = STATE_FAILED
+
+        if self._phase_support:
+            response = requests.get(f"{self._host}/f", timeout=2)
+            if response.ok:
+                self._phases = response.json()

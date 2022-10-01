@@ -1,6 +1,6 @@
 from typing import Optional
 
-from youless_api.youless_sensor import YoulessSensor, PowerMeter, DeliveryMeter, ExtraMeter
+from youless_api.youless_sensor import YoulessSensor, PowerMeter, DeliveryMeter, ExtraMeter, Phase
 
 
 class YouLessDevice:
@@ -57,6 +57,21 @@ class YouLessDevice:
     @property
     def extra_meter(self) -> Optional[ExtraMeter]:
         """Get the meter values of an attached meter."""
+        return None
+
+    @property
+    def phase1(self) -> Optional[Phase]:
+        """Get the phase 1 information"""
+        return None
+
+    @property
+    def phase2(self) -> Optional[Phase]:
+        """Get the phase 1 information"""
+        return None
+
+    @property
+    def phase3(self) -> Optional[Phase]:
+        """Get the phase 1 information"""
         return None
 
     def update(self) -> None:

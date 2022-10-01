@@ -90,6 +90,9 @@ class LS120Tests(TestCase):
         self.assertEqual(api.gas_meter.value, 1624.264)
         self.assertEqual(api.delivery_meter.high.value, 0.000)
         self.assertEqual(api.delivery_meter.low.value, 0.029)
+        self.assertEqual(api.phase1, None)
+        self.assertEqual(api.phase2, None)
+        self.assertEqual(api.phase3, None)
 
     def test_ls120_gas_stale(self):
         """Test case for incident with stale data from the API"""
@@ -150,3 +153,12 @@ class LS120Tests(TestCase):
 
         self.assertEqual(api.state, STATE_OK)
         self.assertEqual(api.firmware, '1.5.3-EL')
+        self.assertEqual(api.phase1.current.value, 0.000)
+        self.assertEqual(api.phase1.voltage.value, 231.600)
+        self.assertEqual(api.phase1.power.value, 64)
+        self.assertEqual(api.phase2.current.value, 0.000)
+        self.assertEqual(api.phase2.voltage.value, 230.400)
+        self.assertEqual(api.phase2.power.value, 103)
+        self.assertEqual(api.phase3.current.value, 2.000)
+        self.assertEqual(api.phase3.voltage.value, 233.100)
+        self.assertEqual(api.phase3.power.value, 312)
