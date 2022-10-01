@@ -2,51 +2,45 @@
 #
 # Check https://circleci.com/docs/2.0/language-python/ for more details
 #
-version: 2
+version: 2.1
+orbs:
+  python: circleci/python@2.1.1
+
+
 jobs:
   build:
-    docker:
-      - image: cimg/python:3.10
-
-    working_directory: ~/repo
-
+    executor: python/default
     steps:
       - checkout
-
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-          - v1-dependencies-{{ checksum "requirements.txt" }}
-          # fallback to using the latest cache if no exact match is found
-          - v1-dependencies-
-
+      - python/install-packages:
+          pip-dependency-file: requirements.txt
+          pkg-manager: pip
+      - python/install-packages:
+          pip-dependency-file: requirements-test.txt
+          pkg-manager: pip
       - run:
-          name: install dependencies
-          command: |
-            python -m venv venv
-            . venv/bin/activate
-            pip install -r requirements.txt -r requirements-test.txt
-
-      - save_cache:
+          name: execute tests
+          command: python -m coverage run -m pytest
+      - persist_to_workspace:
+          root: ~/project
           paths:
-            - ./venv
-          key: v1-dependencies-{{ checksum "requirements.txt" }}
-       
+            - .
+  dist:
+    executor: python/default
+    steps:
+      - attach_workspace:
+          at: ~/project
       - run:
-          name: run tests
-          command: |
-            . venv/bin/activate
-            python -m coverage run -m pytest
+          name: build dist
+          command: python setup.py sdist bdist_wheel
 
-      - run:
-          name: dist
-          command: |
-            . venv/bin/activate
-            python setup.py sdist bdist_wheel
-
-      - store_test_results:
-          path: test-results
-
-      - store_artifacts:
-          path: dist
-          destination: trl
+workflows:
+  test_app:
+    jobs:
+      - build
+      - dist:
+          requires:
+            - build # only deploy if the build_and_test job has completed
+          filters:
+            branches:
+              only: master # only deploy when on main
