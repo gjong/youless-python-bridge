@@ -33,11 +33,11 @@ class PowerMeter:
         self._total = total
 
     @property
-    def low(self):
+    def low(self) -> YoulessSensor:
         return self._low
 
     @property
-    def high(self):
+    def high(self) -> YoulessSensor:
         return self._high
 
     @property
@@ -52,11 +52,11 @@ class DeliveryMeter:
         self._high = high
 
     @property
-    def low(self):
+    def low(self) -> YoulessSensor:
         return self._low
 
     @property
-    def high(self):
+    def high(self) -> YoulessSensor:
         return self._high
 
 
@@ -75,3 +75,20 @@ class ExtraMeter:
         return self._total
 
 
+class Phase:
+    def __init__(self, current: YoulessSensor, voltage: YoulessSensor, power: YoulessSensor):
+        self._current = current
+        self._voltage = voltage
+        self._power = power
+
+    @property
+    def current(self) -> YoulessSensor:
+        return self._current
+
+    @property
+    def voltage(self) -> YoulessSensor:
+        return self._voltage
+
+    @property
+    def power(self) -> YoulessSensor:
+        return self._power
