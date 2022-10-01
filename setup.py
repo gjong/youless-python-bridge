@@ -12,7 +12,5 @@ setuptools.setup(
       url='https://bitbucket.org/jongsoftdev/youless-python-bridge/src/master/',
       author='G. Jongerius',
       license='MIT',
-      test_suite='nose.collector',
-      tests_require=['nose'],
-      packages=setuptools.find_packages(exclude=("test_",)),
+      packages=setuptools.find_packages(exclude=("test",)),
       zip_safe=False)

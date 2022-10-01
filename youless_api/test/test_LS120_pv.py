@@ -3,31 +3,7 @@ import unittest
 from unittest.mock import patch
 
 from youless_api.device.LS120_pv import LS120PVOutput
-
-class MockResponse:
-
-    def __init__(self):
-        self._ok = False
-        self._json = lambda: 0
-        self._headers = {}
-        self._text = ''
-
-    def setup(self, ok, json, text, headers):
-        self._ok = ok
-        self._json = json
-        self._text = text
-        self._headers = headers
-
-    @property
-    def ok(self):
-        return self._ok
-
-    def json(self):
-        return self._json()
-
-    @property
-    def headers(self):
-        return self._headers
+from youless_api.test import MockResponse, URI_ELOGIC, URI_GENERIC
 
 
 def mock_ls120_pvoutput(*args, **kwargs) -> MockResponse:
@@ -36,14 +12,14 @@ def mock_ls120_pvoutput(*args, **kwargs) -> MockResponse:
     def raise_ex(e):
         raise Exception(e)
 
-    if args[0] == '/e':
+    if args[0] == URI_ELOGIC:
         response.setup(
             True,
             lambda: raise_ex("Unsupported operation"),
             'd=20210903&t=14:58&v1=3024759&v2=370&c1=1&v3=19623222&v4=300',
             {'Content-Type': 'text/html'})
 
-    if args[0] == '/a?f=j':
+    if args[0] == URI_GENERIC:
         response.setup(
             True,
             lambda: {
