@@ -30,3 +30,4 @@ class LS110Test(TestCase):
         self.assertEqual(api.power_meter.total.unit_of_measurement, "kWh")
         self.assertEqual(api.power_meter.total.value, 141950.625)
         self.assertEqual(api.current_power_usage.value, 750)
+        self.assertEqual(api.firmware, None)

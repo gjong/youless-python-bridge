@@ -49,7 +49,7 @@ def mock_ls120_ok(*args, **kwargs) -> MockResponse:
 
 
 def mock_ls120_phase_output(*args, **kwargs) -> MockResponse:
-    response = mock_ls120_ok(args, kwargs)
+    response = mock_ls120_ok(*args, *kwargs)
 
     if args[0] == URI_PHASES:
         response.setup(
@@ -81,6 +81,8 @@ class LS120Tests(TestCase):
         api.update()
 
         self.assertEqual(api.state, STATE_OK)
+        self.assertEqual(api.firmware, None)
+
         self.assertEqual(api.power_meter.total.value, 9194.164)
         self.assertEqual(api.power_meter.high.value, 4490.631)
         self.assertEqual(api.power_meter.low.value, 4703.562)
@@ -145,3 +147,6 @@ class LS120Tests(TestCase):
             "fw": "1.5.3-EL"
         })
         api.update()
+
+        self.assertEqual(api.state, STATE_OK)
+        self.assertEqual(api.firmware, '1.5.3-EL')

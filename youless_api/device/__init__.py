@@ -25,6 +25,11 @@ class YouLessDevice:
         return None
 
     @property
+    def firmware(self) -> Optional[str]:
+        """Returns the current firmware on the device."""
+        return None
+
+    @property
     def model(self) -> Optional[str]:
         """Returns the model number of the device"""
         return None

@@ -99,6 +99,14 @@ class LS120(YouLessDevice):
         """Return the device model"""
         return "LS120"
 
+    @property
+    def firmware(self) -> Optional[str]:
+        """Returns the actual firmware on the device."""
+        if self._info is not None and 'fw' in self._info:
+            return self._info['fw']
+
+        return None
+
     def update(self) -> None:
         """Update the sensor values from the device"""
         response = requests.get(f"{self._host}/e", timeout=2)
