@@ -15,9 +15,9 @@ jobs:
       - python/install-packages:
           pip-dependency-file: requirements.txt
           pkg-manager: pip
-      - python/install-packages:
-          pip-dependency-file: requirements-test.txt
-          pkg-manager: pip
+#      - python/install-packages:
+#          pip-dependency-file: requirements-test.txt
+#          pkg-manager: pip
       - run:
           name: execute tests
           command: python -m coverage run -m pytest
