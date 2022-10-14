@@ -5,7 +5,10 @@ from typing import Optional
 
 import requests
 
-from youless_api.devices import LS120, LS110, YouLessDevice, LS120PVOutput
+from youless_api.device import YouLessDevice
+from youless_api.device.LS110 import LS110
+from youless_api.device.LS120 import LS120
+from youless_api.device.LS120_pv import LS120PVOutput
 from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter
 
 name = "youless_api"

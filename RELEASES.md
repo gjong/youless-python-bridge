@@ -1,3 +1,11 @@
+# Release notes - YouLess API - Version 1.0
+
+[Code changes](https://bitbucket.org/jongsoftdev/youless-python-bridge/branches/compare/1.0%0D0.16#diff)
+
+### Feature
+
+[YA-14](https://jongsoftdev.atlassian.net/browse/YA-14) Add support for the new phase information in firmware 1.5.x
+
 # Release notes - YouLess API - Version 0.16
 
 [Code changes](https://bitbucket.org/jongsoftdev/youless-python-bridge/branches/compare/0.16%0D0.15#diff)
