@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
       name='youless_api',
-      version='1.0',
+      version='1.0.1',
       description='A bridge for python to the YouLess sensor',
       long_description=long_description,
       long_description_content_type="text/markdown",

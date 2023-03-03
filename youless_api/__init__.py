@@ -9,7 +9,7 @@ from youless_api.device import YouLessDevice
 from youless_api.device.LS110 import LS110
 from youless_api.device.LS120 import LS120
 from youless_api.device.LS120_pv import LS120PVOutput
-from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter
+from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter, Phase
 
 name = "youless_api"
 
@@ -100,6 +100,30 @@ class YoulessAPI:
         """Get the meter values of an attached meter."""
         if self._device is not None:
             return self._device.extra_meter
+
+        return None
+
+    @property
+    def phase1(self) -> Optional[Phase]:
+        """Get the phase 1 information"""
+        if self._device is not None:
+            return self._device.phase1
+
+        return None
+
+    @property
+    def phase2(self) -> Optional[Phase]:
+        """Get the phase 1 information"""
+        if self._device is not None:
+            return self._device.phase2
+
+        return None
+
+    @property
+    def phase3(self) -> Optional[Phase]:
+        """Get the phase 1 information"""
+        if self._device is not None:
+            return self._device.phase3
 
         return None
 
