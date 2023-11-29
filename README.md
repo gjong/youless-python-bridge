@@ -15,6 +15,8 @@ To request new features or report bugs please use:
 
     https://jongsoftdev.atlassian.net/jira/software/c/projects/YA/issues/
 
+If you want to contribute by creating code yourself then create a fork of the repository and offer the changes in a PR back into this repository.
+
 ## Using the python integration
 
 To use the API use the following code:
