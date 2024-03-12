@@ -11,11 +11,16 @@ from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, De
 def validate_enologic_response(raw_data: dict) -> dict:
     """Validate the response to verify that it makes sense and no junk data is returned"""
 
-    corrected = {**{'p1': None, 'p2': None, 'n1': None, 'n2': None, 'gas': None}, **raw_data}
+    corrected = {**{'p1': None, 'p2': None, 'n1': None, 'n2': None, 'gas': None, 'wtr': None}, **raw_data}
     if 'gts' in corrected:
         formatted_date = datetime.datetime.now().strftime("%y%m%d") + "0000"
         if corrected["gts"] != 0 and int(formatted_date) >= corrected["gts"]:
             corrected["gas"] = None
+
+    if 'wts' in corrected:
+        formatted_date = datetime.datetime.now().strftime("%y%m%d") + "0000"
+        if corrected["wts"] != 0 and int(formatted_date) >= corrected["wts"]:
+            corrected["wtr"] = None
 
     return corrected
 
@@ -46,6 +51,14 @@ class LS120(YouLessDevice):
         """"Get the gas meter from the internal cache"""
         if self._cache is not None:
             return YoulessSensor(self._cache['gas'], 'm3')
+
+        return None
+
+    @property
+    def water_meter(self):
+        """"Get the water meter from the internal cache"""
+        if self._cache is not None:
+            return YoulessSensor(self._cache['wtr'], 'm3')
 
         return None
 

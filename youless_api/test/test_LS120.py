@@ -18,7 +18,9 @@ default_ok_response = [{
     "n1": 0.029,
     "n2": 0.000,
     "gas": 1624.264,
-    "gts": int(datetime.datetime.now().strftime("%y%m%d%H00"))
+    "gts": int(datetime.datetime.now().strftime("%y%m%d%H00")),
+    "wtr": 1234.564,
+    "wts": int(datetime.datetime.now().strftime("%y%m%d%H00"))
 }]
 default_phases_response = {
     "ver": 50,
@@ -88,6 +90,7 @@ class LS120Tests(TestCase):
         self.assertEqual(api.power_meter.low.value, 4703.562)
         self.assertEqual(api.current_power_usage.value, 2382)
         self.assertEqual(api.gas_meter.value, 1624.264)
+        self.assertEqual(api.water_meter.value, 1234.564)
         self.assertEqual(api.delivery_meter.high.value, 0.000)
         self.assertEqual(api.delivery_meter.low.value, 0.029)
         self.assertEqual(api.phase1, None)
@@ -110,7 +113,9 @@ class LS120Tests(TestCase):
                 "n1": 0.029,
                 "n2": 0.000,
                 "gas": 1624.264,
-                "gts": 3894900
+                "gts": 3894900,
+                "wtr": 1234.564,
+                "wts": 3894900
             }]
 
             api = LS120('', {})
@@ -131,7 +136,9 @@ class LS120Tests(TestCase):
                 "cs0": 0.000,
                 "ps0": 0,
                 "gas": 1624.264,
-                "gts": int(datetime.datetime.now().strftime("%y%m%d%H00"))
+                "gts": int(datetime.datetime.now().strftime("%y%m%d%H00")),
+                "wtr": 1234.564,
+                "wts": int(datetime.datetime.now().strftime("%y%m%d%H00"))
             }]
 
             api = LS120('', {})
