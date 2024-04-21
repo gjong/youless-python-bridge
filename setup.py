@@ -9,7 +9,7 @@ setuptools.setup(
       description='A bridge for python to the YouLess sensor',
       long_description=long_description,
       long_description_content_type="text/markdown",
-      url='https://bitbucket.org/jongsoftdev/youless-python-bridge/src/master/',
+      url='https://github.com/gjong/youless-python-bridge',
       author='G. Jongerius',
       license='MIT',
       packages=setuptools.find_packages(exclude=("test",)),
