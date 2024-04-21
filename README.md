@@ -13,7 +13,7 @@ Experimental support for authentication was added in v0.15 of the youless-python
 
 To request new features or report bugs please use:
 
-    https://jongsoftdev.atlassian.net/jira/software/c/projects/YA/issues/
+    https://github.com/gjong/youless-python-bridge/issues/new
 
 If you want to contribute by creating code yourself then create a fork of the repository and offer the changes in a PR back into this repository.
 
