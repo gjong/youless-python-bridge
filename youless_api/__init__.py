@@ -64,6 +64,14 @@ class YoulessAPI:
         return None
 
     @property
+    def water_meter(self) -> Optional[YoulessSensor]:
+        """"Get the water data available."""
+        if self._device is not None:
+            return self._device.water_meter
+
+        return None
+
+    @property
     def gas_meter(self) -> Optional[YoulessSensor]:
         """"Get the gas data available."""
         if self._device is not None:
