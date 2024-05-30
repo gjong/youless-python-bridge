@@ -1,139 +1,116 @@
 """
 This file contains a helper class to easily obtain data from the YouLess sensor.
 """
+import logging
 from typing import Optional
 
-import requests
-
-from youless_api.device import YouLessDevice
-from youless_api.device.LS110 import LS110
-from youless_api.device.LS120 import LS120
-from youless_api.device.LS120_pv import LS120PVOutput
+from youless_api.const import SensorType
+from youless_api.device import ls110, ls120
+from youless_api.gateway import fetch_device_info, fetch_enologic_api
 from youless_api.youless_sensor import YoulessSensor, PowerMeter, ExtraMeter, DeliveryMeter, Phase
 
 name = "youless_api"
+logger = logging.getLogger(__name__)
 
 
 class YoulessAPI:
     """A helper class to obtain data from the YouLess Sensor."""
 
-    _device: Optional[YouLessDevice]
+    _cache_data: Optional[dict] = None
 
     def __init__(self, host, username=None, password=None):
         """Initialize the data bridge."""
-        self._url = 'http://' + host
+        self._host = host
         if username is None:
             self._authentication = None
         else:
             self._authentication = (username, password)
-        self._device = None
+        self._model = None
+        self._mac_address = None
+        self._firmware_version = None
+        self._fetcher = None
 
     def initialize(self):
         """Establish a connection to the remote device"""
-        response = requests.get(f"{self._url}/d", auth=self._authentication, timeout=2)
-        if response.ok:
-            firmware_check = requests.get(f"{self._url}/e", auth=self._authentication, timeout=2)
-            if firmware_check.ok and firmware_check.headers['Content-Type'] == 'application/json':
-                self._device = LS120(self._url, response.json())
-            else:
-                self._device = LS120PVOutput(self._url, response.json())
+        device_info = fetch_device_info(self._host, self._authentication)
+
+        if device_info is None:
+            logger.debug("No device information discovered, assuming LS110 device.")
+            self._model = "LS110"
+            self._fetcher = ls110(self._host, self._authentication)
         else:
-            alive = requests.get(self._url, auth=self._authentication, timeout=2)
-            if alive.ok:
-                self._device = LS110(self._url)
+            self._mac_address = device_info["mac"]
+            self._firmware_version = device_info["version"] if "version" in device_info else None
+
+            enologic_data = fetch_enologic_api(self._host, self._authentication)
+            if enologic_data is None:
+                logger.debug("Incorrect enologic response, assuming LS120 with PVOutput firmware.")
+                self._model = "LS120 - PVOutput"
+                self._fetcher = ls110(self._host, self._authentication)
+            else:
+                logger.debug("Enologic output detected, LS120 device found.")
+                self._model = "LS120"
+                self._fetcher = ls120(self._host, self._authentication, device_info)
 
     def update(self):
         """Fetch the latest settings from the Youless Sensor."""
-        if self._device:
-            self._device.update()
+        if self._fetcher:
+            self._cache_data = self._fetcher()
 
     @property
     def mac_address(self) -> Optional[str]:
         """Get the MAC address of the connected device."""
-        if self._device is not None:
-            return self._device.mac_address
-
-        return None
+        return self._mac_address
 
     @property
     def model(self) -> Optional[str]:
         """Return the model of the connected device."""
-        if self._device is not None:
-            return self._device.model
-
-        return None
+        return self._model
 
     @property
     def water_meter(self) -> Optional[YoulessSensor]:
-        """"Get the water data available."""
-        if self._device is not None:
-            return self._device.water_meter
-
-        return None
+        """Get the water data available."""
+        return self._cache_data[SensorType.WATER] if SensorType.WATER in self._cache_data else None
 
     @property
     def gas_meter(self) -> Optional[YoulessSensor]:
         """"Get the gas data available."""
-        if self._device is not None:
-            return self._device.gas_meter
-
-        return None
+        return self._cache_data[SensorType.GAS] if SensorType.GAS in self._cache_data else None
 
     @property
     def current_power_usage(self) -> Optional[YoulessSensor]:
         """Get the current power usage."""
-        if self._device is not None:
-            return self._device.current_power_usage
-
-        return None
+        return self._cache_data[SensorType.POWER_USAGE] if SensorType.POWER_USAGE in self._cache_data else None
 
     @property
     def power_meter(self) -> Optional[PowerMeter]:
         """Get the power meter values."""
-        if self._device is not None:
-            return self._device.power_meter
-
-        return None
+        return self._cache_data[SensorType.POWER_METER] if SensorType.POWER_METER in self._cache_data else None
 
     @property
     def delivery_meter(self) -> Optional[DeliveryMeter]:
         """Get the power delivered values."""
-        if self._device is not None:
-            return self._device.delivery_meter
-
-        return None
+        return self._cache_data[SensorType.WATER] if SensorType.WATER in self._cache_data else None
 
     @property
     def extra_meter(self) -> Optional[ExtraMeter]:
         """Get the meter values of an attached meter."""
-        if self._device is not None:
-            return self._device.extra_meter
-
-        return None
+        return self._cache_data[SensorType.EXTRA_METER] if SensorType.EXTRA_METER in self._cache_data else None
 
     @property
     def phase1(self) -> Optional[Phase]:
         """Get the phase 1 information"""
-        if self._device is not None:
-            return self._device.phase1
-
-        return None
+        return self._cache_data[SensorType.PHASE1] if SensorType.PHASE1 in self._cache_data else None
 
     @property
     def phase2(self) -> Optional[Phase]:
         """Get the phase 1 information"""
-        if self._device is not None:
-            return self._device.phase2
-
-        return None
+        return self._cache_data[SensorType.PHASE2] if SensorType.PHASE2 in self._cache_data else None
 
     @property
     def phase3(self) -> Optional[Phase]:
         """Get the phase 1 information"""
-        if self._device is not None:
-            return self._device.phase3
-
-        return None
+        return self._cache_data[SensorType.PHASE3] if SensorType.PHASE3 in self._cache_data else None
 
     @property
     def secured(self) -> bool:

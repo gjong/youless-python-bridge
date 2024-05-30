@@ -1,11 +1,15 @@
+import os
 import setuptools
 
 with open("README.md", "r") as fh:
     long_description = fh.read()
 
+default_version = '2.0.0'
+version = os.getenv('PUBLISH_VERSION', default_version)
+
 setuptools.setup(
       name='youless_api',
-      version='1.1.1',
+      version=version,
       description='A bridge for python to the YouLess sensor',
       long_description=long_description,
       long_description_content_type="text/markdown",
