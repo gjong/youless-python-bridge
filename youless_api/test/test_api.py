@@ -88,7 +88,7 @@ def mock_ls110_device(*args, **kwargs):
 
 class YoulessAPITest(unittest.TestCase):
 
-    @patch('gateway.requests.get', side_effect=mock_ls120)
+    @patch('youless_api.gateway.requests.get', side_effect=mock_ls120)
     def test_device_ls120(self, mock_get: MagicMock):
         api = YoulessAPI(test_host)
         api.initialize()
@@ -99,7 +99,7 @@ class YoulessAPITest(unittest.TestCase):
         mock_get.assert_any_call('http://192.1.1.1/d', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=None, timeout=2)
 
-    @patch('gateway.requests.get', side_effect=mock_ls120)
+    @patch('youless_api.gateway.requests.get', side_effect=mock_ls120)
     def test_device_ls120_authenticated(self, mock_get: MagicMock):
         api = YoulessAPI(test_host, 'admin', 'password')
         api.initialize()
@@ -108,7 +108,7 @@ class YoulessAPITest(unittest.TestCase):
         mock_get.assert_any_call('http://192.1.1.1/d', auth=('admin', 'password'), timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=('admin', 'password'), timeout=2)
 
-    @patch('gateway.requests.get', side_effect=mock_ls120_pvoutput)
+    @patch('youless_api.gateway.requests.get', side_effect=mock_ls120_pvoutput)
     def test_ls120_firmare_pvoutput(self, mock_get: MagicMock):
         api = YoulessAPI(test_host)
         api.initialize()
@@ -119,7 +119,7 @@ class YoulessAPITest(unittest.TestCase):
         mock_get.assert_any_call('http://192.1.1.1/d', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=None, timeout=2)
 
-    @patch('gateway.requests.get', side_effect=mock_ls120_pvoutput)
+    @patch('youless_api.gateway.requests.get', side_effect=mock_ls120_pvoutput)
     def test_ls120_firmare_pvoutput_authenticated(self, mock_get: MagicMock):
         api = YoulessAPI(test_host, 'admin', 'password')
         api.initialize()
@@ -129,7 +129,7 @@ class YoulessAPITest(unittest.TestCase):
         mock_get.assert_any_call('http://192.1.1.1/d', auth=('admin', 'password'), timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=('admin', 'password'), timeout=2)
 
-    @patch('gateway.requests.get', side_effect=mock_ls110_device)
+    @patch('youless_api.gateway.requests.get', side_effect=mock_ls110_device)
     def test_device_ls110(self, mock_get: MagicMock):
         api = YoulessAPI(test_host)
         api.initialize()
@@ -141,7 +141,7 @@ class YoulessAPITest(unittest.TestCase):
         api.update()
         mock_get.assert_called_with('http://192.1.1.1/a?f=j', auth=None, timeout=2)
 
-    @patch('gateway.requests.get', side_effect=mock_ls110_device)
+    @patch('youless_api.gateway.requests.get', side_effect=mock_ls110_device)
     def test_device_ls110_authenticated(self, mock_get: MagicMock):
         api = YoulessAPI(test_host, 'admin', 'password')
         api.initialize()
