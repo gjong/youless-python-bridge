@@ -1,83 +1,77 @@
 from typing import Optional
 
+from youless_api.gateway import fetch_enologic_api, fetch_generic_api, fetch_phase_api
 from youless_api.youless_sensor import YoulessSensor, PowerMeter, DeliveryMeter, ExtraMeter, Phase
+from youless_api.const import SensorType
 
 
-class YouLessDevice:
-    """The base class for the Youless devices"""
+def ls110(host, authentication):
+    """The device wrapper for the LS110, will return a function to fetch the latest information."""
+    def update() -> Optional[dict]:
+        """The actual method to refresh the data."""
+        dataset = fetch_generic_api(host, authentication)
+        if dataset is None:
+            return None
 
-    def __init__(self):
-        """Initialize the state"""
+        return {
+            SensorType.POWER_METER: PowerMeter(
+                YoulessSensor(None, None),
+                YoulessSensor(None, None),
+                YoulessSensor(dataset['cnt'], 'kWh')
+            ),
+            SensorType.POWER_USAGE: YoulessSensor(dataset['pwr'], 'W'),
+            SensorType.EXTRA_METER: ExtraMeter(
+                YoulessSensor(dataset['cs0'], 'kWh'),
+                YoulessSensor(dataset['ps0'], 'W')
+            )
+        }
 
-    @property
-    def state(self) -> Optional[str]:
-        """The current state of the connection"""
-        return None
+    return update
 
-    @property
-    def error(self) -> Optional[str]:
-        """Returns the last known error, only if state == 'FAILED'"""
-        return None
 
-    @property
-    def mac_address(self) -> Optional[str]:
-        """Returns the MAC address"""
-        return None
+def ls120(host, authentication, device_info):
+    """The device wrapper for the LS120, will return a function to fetch the latest information."""
+    supports_phases = False
+    if 'fw' in device_info:
+        supports_phases = float(device_info['fw'][0:3]) >= 1.5
 
-    @property
-    def firmware(self) -> Optional[str]:
-        """Returns the current firmware on the device."""
-        return None
+    def update() -> Optional[dict]:
+        """The actual method to refresh the data."""
+        dataset = fetch_enologic_api(host, authentication)
+        phase_info = fetch_phase_api(host, authentication) if supports_phases else None
 
-    @property
-    def model(self) -> Optional[str]:
-        """Returns the model number of the device"""
-        return None
+        if dataset is None:
+            return None
 
-    @property
-    def water_meter(self) -> Optional[YoulessSensor]:
-        """"Get the water data available."""
-        return None
+        return {
+            SensorType.GAS: YoulessSensor(dataset['wtr'], 'm3'),
+            SensorType.POWER_USAGE: YoulessSensor(dataset['pwr'], 'W'),
+            SensorType.POWER_METER: PowerMeter(
+                YoulessSensor(dataset['p1'], 'kWh'),
+                YoulessSensor(dataset['p2'], 'kWh'),
+                YoulessSensor(dataset['net'], 'kWh')
+            ),
+            SensorType.DELIVERY_METER: DeliveryMeter(
+                YoulessSensor(dataset['n1'], 'kWh'),
+                YoulessSensor(dataset['n2'], 'kWh')
+            ),
+            SensorType.EXTRA_METER: ExtraMeter(
+                YoulessSensor(dataset['cs0'], 'kWh'),
+                YoulessSensor(dataset['ps0'], 'W')
+            ),
+            SensorType.PHASE1: Phase(
+                YoulessSensor(phase_info['i1'], ''),
+                YoulessSensor(phase_info['v1'], ''),
+                YoulessSensor(phase_info['l1'], '')) if supports_phases else None,
+            SensorType.PHASE2: Phase(
+                YoulessSensor(phase_info['i2'], ''),
+                YoulessSensor(phase_info['v2'], ''),
+                YoulessSensor(phase_info['l2'], '')) if supports_phases else None,
+            SensorType.PHASE3: Phase(
+                YoulessSensor(phase_info['i3'], ''),
+                YoulessSensor(phase_info['v3'], ''),
+                YoulessSensor(phase_info['l3'], '')) if supports_phases else None
+        }
 
-    @property
-    def gas_meter(self) -> Optional[YoulessSensor]:
-        """"Get the gas data available."""
-        return None
+    return update
 
-    @property
-    def current_power_usage(self) -> Optional[YoulessSensor]:
-        """Get the current power usage."""
-        return None
-
-    @property
-    def power_meter(self) -> Optional[PowerMeter]:
-        """Get the power meter values."""
-        return None
-
-    @property
-    def delivery_meter(self) -> Optional[DeliveryMeter]:
-        """Get the power delivered values."""
-        return None
-
-    @property
-    def extra_meter(self) -> Optional[ExtraMeter]:
-        """Get the meter values of an attached meter."""
-        return None
-
-    @property
-    def phase1(self) -> Optional[Phase]:
-        """Get the phase 1 information"""
-        return None
-
-    @property
-    def phase2(self) -> Optional[Phase]:
-        """Get the phase 1 information"""
-        return None
-
-    @property
-    def phase3(self) -> Optional[Phase]:
-        """Get the phase 1 information"""
-        return None
-
-    def update(self) -> None:
-        """Placeholder to update values from device"""
