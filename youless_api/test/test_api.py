@@ -8,6 +8,7 @@ from youless_api import YoulessAPI
 
 test_host = "192.1.1.1"
 
+
 def mock_ls120_pvoutput(*args, **kwargs) -> Response:
     response: Response = Mock()
 
