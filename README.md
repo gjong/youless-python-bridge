@@ -9,15 +9,7 @@ supports the following YouLess devices:
 
 Experimental support for authentication was added in v0.15 of the youless-python-bridge.
 
-## Contributing
-
-To request new features or report bugs please use:
-
-    https://github.com/gjong/youless-python-bridge/issues/new
-
-If you want to contribute by creating code yourself then create a fork of the repository and offer the changes in a PR back into this repository.
-
-## Using the python integration
+## Getting started
 
 To use the API use the following code:
 
@@ -46,3 +38,14 @@ if __name__ == '__main__':
     # from this point on on you should be able to access the sensors through the YouLess bridge
     gasUsage = api.gas_meter.value
 ```
+
+## Contributing
+
+The Youless Python Data Bridge is an open-source project and welcomes any additions by the community.
+
+If you would like to contribute, please fork this repository and make your desired changes.
+You can then offer those changes using a pull request into this repository.
+
+### The contributors :star2:
+
+[![Contributors](https://contrib.rocks/image?repo=gjong/youless-python-bridge)](https://github.com/gjong/youless-python-bridge/graphs/contributors)
