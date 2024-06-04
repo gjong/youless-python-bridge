@@ -15,3 +15,4 @@ class SensorType(Enum):
     PHASE1 = "phase1"
     PHASE2 = "phase2"
     PHASE3 = "phase3"
+    TARIFF = "tariff"

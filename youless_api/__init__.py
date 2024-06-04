@@ -75,6 +75,11 @@ class YoulessAPI:
         return self._firmware_version
 
     @property
+    def current_tariff(self) -> Optional[int]:
+        """Get the current tariff, is either 0 or 1 and only present if phase information is present."""
+        return self._cache_data[SensorType.TARIFF] if SensorType.TARIFF in self._cache_data else None
+
+    @property
     def water_meter(self) -> Optional[YoulessSensor]:
         """Get the water data available."""
         return self._cache_data[SensorType.WATER] if SensorType.WATER in self._cache_data else None

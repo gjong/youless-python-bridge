@@ -38,7 +38,7 @@ def ls120(host, authentication, device_info):
     def update() -> Optional[dict]:
         """The actual method to refresh the data."""
         dataset = fetch_enologic_api(host, authentication)
-        phase_info = fetch_phase_api(host, authentication) if supports_phases else None
+        phase_info = fetch_phase_api(host, authentication) if supports_phases else {}
 
         if dataset is None:
             return None
@@ -62,15 +62,16 @@ def ls120(host, authentication, device_info):
             SensorType.PHASE1: Phase(
                 YoulessSensor(phase_info['i1'], ''),
                 YoulessSensor(phase_info['v1'], ''),
-                YoulessSensor(phase_info['l1'], '')) if supports_phases else None,
+                YoulessSensor(phase_info['l1'], '')) if 'i1' in phase_info else None,
             SensorType.PHASE2: Phase(
                 YoulessSensor(phase_info['i2'], ''),
                 YoulessSensor(phase_info['v2'], ''),
-                YoulessSensor(phase_info['l2'], '')) if supports_phases else None,
+                YoulessSensor(phase_info['l2'], '')) if 'i2' in phase_info else None,
             SensorType.PHASE3: Phase(
                 YoulessSensor(phase_info['i3'], ''),
                 YoulessSensor(phase_info['v3'], ''),
-                YoulessSensor(phase_info['l3'], '')) if supports_phases else None
+                YoulessSensor(phase_info['l3'], '')) if 'i3' in phase_info else None,
+            SensorType.TARIFF: phase_info['tr'] if phase_info else None,
         }
 
     return update

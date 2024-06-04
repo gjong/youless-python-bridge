@@ -10,15 +10,17 @@ test_host = "192.1.1.1"
 
 
 def mock_ls120_pvoutput(*args, **kwargs) -> Response:
-    response: Response = Mock()
-
     if args[0] == 'http://192.1.1.1/d':
-        response.ok = True
-        response.json = lambda: {'mac': '293:23fd:23'}
+        return Mock(
+            ok=True,
+            json=lambda: {'mac': '293:23fd:23'}
+        )
 
     if args[0] == 'http://192.1.1.1/e':
-        response.ok = True
-        response.headers = {'Content-Type': 'text/html'}
+        return Mock(
+            ok=True,
+            headers={'Content-Type': 'text/html'}
+        )
 
     if args[0] == 'http://192.1.1.1/a?f=j':
         return Mock(
@@ -34,37 +36,55 @@ def mock_ls120_pvoutput(*args, **kwargs) -> Response:
                 "raw": 743
             })
 
-    return response
+    return Mock(ok=False)
 
 
 def mock_ls120(*args, **kwargs) -> Response:
-    response: Response = Mock()
-
     if args[0] == 'http://192.1.1.1/d':
-        response.ok = True
-        response.json = lambda: {'mac': '293:23fd:23'}
+        return Mock(
+            ok=True,
+            json=lambda: {'mac': '293:23fd:23', 'fw': '1.6.0-EL'}
+        )
 
     if args[0] == 'http://192.1.1.1/e':
-        response.ok = True
-        response.headers = {'Content-Type': 'application/json'}
-        response.json = lambda: [{
-            "tm": 1611929119,
-            "net": 9194.164,
-            "pwr": 2382,
-            "ts0": 1608654000,
-            "cs0": 0.000,
-            "ps0": 0,
-            "p1": 4703.562,
-            "p2": 4490.631,
-            "n1": 0.029,
-            "n2": 0.000,
-            "gas": 1624.264,
-            "gts": int(datetime.now().strftime("%y%m%d%H00")),
-            "wtr": 1234.564,
-            "wts": int(datetime.now().strftime("%y%m%d%H00"))
-        }]
+        return Mock(
+            ok=True,
+            headers={'Content-Type': 'application/json'},
+            json=lambda: [{
+                "tm": 1611929119,
+                "net": 9194.164,
+                "pwr": 2382,
+                "ts0": 1608654000,
+                "cs0": 0.000,
+                "ps0": 0,
+                "p1": 4703.562,
+                "p2": 4490.631,
+                "n1": 0.029,
+                "n2": 0.000,
+                "gas": 1624.264,
+                "gts": int(datetime.now().strftime("%y%m%d%H00")),
+                "wtr": 1234.564,
+                "wts": int(datetime.now().strftime("%y%m%d%H00"))
+            }])
 
-    return response
+    if args[0] == 'http://192.1.1.1/f':
+        return Mock(
+            ok=True,
+            json=lambda: {
+                "tr": 1,
+                "i1": 0.123,
+                "v1": 240,
+                "l1": 462,
+                "v2": 240,
+                "l2": 230,
+                "i2": 0.123,
+                "v3": 240,
+                "l3": 230,
+                "i3": 0.123
+            }
+        )
+
+    return Mock(ok=False)
 
 
 def mock_ls110_device(*args, **kwargs):
@@ -97,8 +117,12 @@ class YoulessAPITest(unittest.TestCase):
 
         self.assertEqual(api.model, 'LS120')
         self.assertEqual(api.mac_address, '293:23fd:23')
+        self.assertEqual(api.firmware_version, '1.6.0-EL')
+        self.assertEqual(api.current_tariff, 1)
+
         mock_get.assert_any_call('http://192.1.1.1/d', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=None, timeout=2)
+        mock_get.assert_any_call('http://192.1.1.1/f', auth=None, timeout=2)
 
     @patch('youless_api.gateway.requests.get', side_effect=mock_ls120)
     def test_device_ls120_authenticated(self, mock_get: MagicMock):

@@ -25,7 +25,7 @@ def fetch_phase_api(host, authentication=None) -> Optional[dict]:
     """Fetches the data from the Youless API on the /f endpoint."""
     response = requests.get(f"http://{host}/f", auth=authentication, timeout=2)
 
-    return response.json() if response.ok else None
+    return response.json() if response.ok else {}
 
 
 def fetch_enologic_api(host, authentication=None):
