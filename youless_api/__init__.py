@@ -40,7 +40,7 @@ class YoulessAPI:
             self._fetcher = ls110(self._host, self._authentication)
         else:
             self._mac_address = device_info["mac"]
-            self._firmware_version = device_info["version"] if "version" in device_info else None
+            self._firmware_version = device_info["fw"] if "fw" in device_info else None
 
             enologic_data = fetch_enologic_api(self._host, self._authentication)
             if enologic_data is None:
@@ -56,6 +56,8 @@ class YoulessAPI:
         """Fetch the latest settings from the Youless Sensor."""
         if self._fetcher:
             self._cache_data = self._fetcher()
+        else:
+            logger.warning("No fetch algorithm is chosen, setup failed.")
 
     @property
     def mac_address(self) -> Optional[str]:
@@ -66,6 +68,11 @@ class YoulessAPI:
     def model(self) -> Optional[str]:
         """Return the model of the connected device."""
         return self._model
+
+    @property
+    def firmware_version(self) -> Optional[str]:
+        """Get the firmware version of the connected device."""
+        return self._firmware_version
 
     @property
     def water_meter(self) -> Optional[YoulessSensor]:
