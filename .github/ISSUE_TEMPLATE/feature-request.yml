@@ -1,0 +1,28 @@
+name: Feature request
+description: Request a new feature.
+title: "[Feature]: "
+labels: ["enhancement", "triage"]
+assignees:
+  - gjong
+body:
+  - type: markdown
+    attributes:
+      value: |
+        Thanks for taking the time to fill out this feature request! Please provide as much
+        information as possible to help us understand your request.
+  - type: textarea
+    id: summary
+    attributes:
+      label: "Summary"
+      description: Provide a brief explanation of the feature
+      placeholder: Describe in a few lines your feature request
+    validations:
+      required: true
+  - type: textarea
+    id: unresolved_question
+    attributes:
+      label: "Open questions"
+      description: What questions still remain unresolved ?
+      placeholder: Identify any unresolved issues.
+    validations:
+      required: false
