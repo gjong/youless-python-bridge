@@ -1,5 +1,6 @@
 # YouLess Python Data Bridge
 [![PyPI version](https://badge.fury.io/py/youless-api.svg)](https://badge.fury.io/py/youless-api)
+![Python package](https://github.com/gjong/youless-python-bridge/actions/workflows/python-package.yml/badge.svg?branch=master)
 
 This package contains support classes to fetch data from the YouLess sensors. The current implementation
 supports the following YouLess devices:
