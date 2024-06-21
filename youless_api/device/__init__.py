@@ -60,17 +60,17 @@ def ls120(host, authentication, device_info):
                 YoulessSensor(dataset['ps0'], 'W')
             ),
             SensorType.PHASE1: Phase(
-                YoulessSensor(phase_info['i1'], ''),
-                YoulessSensor(phase_info['v1'], ''),
-                YoulessSensor(phase_info['l1'], '')) if 'i1' in phase_info else None,
+                YoulessSensor(phase_info['i1'], 'A'),
+                YoulessSensor(phase_info['v1'], 'V'),
+                YoulessSensor(phase_info['l1'], 'W')) if 'i1' in phase_info else None,
             SensorType.PHASE2: Phase(
-                YoulessSensor(phase_info['i2'], ''),
-                YoulessSensor(phase_info['v2'], ''),
+                YoulessSensor(phase_info['i2'], 'A'),
+                YoulessSensor(phase_info['v2'], 'V'),
                 YoulessSensor(phase_info['l2'], '')) if 'i2' in phase_info else None,
             SensorType.PHASE3: Phase(
-                YoulessSensor(phase_info['i3'], ''),
-                YoulessSensor(phase_info['v3'], ''),
-                YoulessSensor(phase_info['l3'], '')) if 'i3' in phase_info else None,
+                YoulessSensor(phase_info['i3'], 'A'),
+                YoulessSensor(phase_info['v3'], 'V'),
+                YoulessSensor(phase_info['l3'], 'W')) if 'i3' in phase_info else None,
             SensorType.TARIFF: phase_info['tr'] if phase_info else None,
         }
 
