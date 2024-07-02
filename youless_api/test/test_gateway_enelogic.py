@@ -43,8 +43,8 @@ def mock_stale_gas(*args, **kwargs) -> Response:
                 "net": 9194.164,
                 "pwr": 2382,
                 "ts0": 1608654000,
-                "cs0": 0.000,
-                "ps0": 0,
+                "cs0": 15.000,
+                "ps0": 10,
                 "p1": 4703.562,
                 "p2": 4490.631,
                 "n1": 0.029,
@@ -111,7 +111,8 @@ class GatewayTest(TestCase):
         self.assertEqual(dataset['pwr'], 2382)
         self.assertEqual(dataset['gas'], None)
         self.assertEqual(dataset['wtr'], None)
-        self.assertEqual(dataset['cs0'], 0.000)
+        self.assertEqual(dataset['cs0'], 15.000)
+        self.assertEqual(dataset['ps0'], 10)
         self.assertEqual(dataset['n1'], 0.029)
         mock_get.assert_any_call('http://localhost/e', auth=None, timeout=2)
 

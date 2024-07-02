@@ -55,8 +55,8 @@ def mock_ls120(*args, **kwargs) -> Response:
                 "net": 9194.164,
                 "pwr": 2382,
                 "ts0": 1608654000,
-                "cs0": 0.000,
-                "ps0": 0,
+                "cs0": 15.000,
+                "ps0": 10,
                 "p1": 4703.562,
                 "p2": 4490.631,
                 "n1": 0.029,
@@ -119,6 +119,9 @@ class YoulessAPITest(unittest.TestCase):
         self.assertEqual(api.mac_address, '293:23fd:23')
         self.assertEqual(api.firmware_version, '1.6.0-EL')
         self.assertEqual(api.current_tariff, 1)
+
+        self.assertEqual(api.extra_meter.total.value, 15.0)
+        self.assertEqual(api.extra_meter.usage.value, 10)
 
         mock_get.assert_any_call('http://192.1.1.1/d', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=None, timeout=2)
