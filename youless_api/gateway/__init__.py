@@ -33,7 +33,20 @@ def fetch_enologic_api(host, authentication=None):
     response = requests.get(f"http://{host}/e", auth=authentication, timeout=2)
 
     if response.ok and response.headers['Content-Type'] == 'application/json':
-        corrected = {**{'p1': None, 'p2': None, 'n1': None, 'n2': None, 'gas': None, 'wtr': None}, **response.json()[0]}
+        """Use fallback values if specific sensor values are missing."""
+        corrected = {
+            **{
+                'p1': None,
+                'p2': None,
+                'n1': None,
+                'n2': None,
+                'gas': None,
+                'wtr': None,
+                'pwr': None,
+                'cs0': None,
+                'ps0': None},
+            **response.json()[0]
+        }
         if 'gts' in corrected:
             formatted_date = datetime.now().strftime("%y%m%d") + "0000"
             if corrected["gts"] != 0 and int(formatted_date) >= corrected["gts"]:
