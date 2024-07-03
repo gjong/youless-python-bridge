@@ -87,6 +87,56 @@ def mock_ls120(*args, **kwargs) -> Response:
     return Mock(ok=False)
 
 
+def mock_ls120_reported(*args, **kwargs) -> Response:
+    if args[0] == 'http://192.1.1.1/d':
+        return Mock(
+            ok=True,
+            json=lambda: {'mac': '293:23fd:23', 'fw': '1.6.0-EL'}
+        )
+
+    if args[0] == 'http://192.1.1.1/e':
+        return Mock(
+            ok=True,
+            headers={'Content-Type': 'application/json'},
+            json=lambda: [{
+                "tm": 1719966932,
+                "net": 24277.256,
+                "pwr": -6,
+                "ts0": 1719964559,
+                "cs0": 75.271,
+                "ps0": 0,
+                "p1": 13775.844,
+                "p2": 12057.301,
+                "n1": 439.157,
+                "n2": 1116.732,
+                "gas": 3754.789,
+                "gts":int(datetime.now().strftime("%y%m%d%H00")),
+                "wtr": 0.000,
+                "wts": 0
+            }])
+
+    if args[0] == 'http://192.1.1.1/f':
+        return Mock(
+            ok=True,
+            json=lambda: {
+                "tr": 2,
+                "pa": 0,
+                "pp": 0,
+                "pts": 0,
+                "i1": 1.000,
+                "i2": 2.000,
+                "i3": 1.000,
+                "v1": 233.900,
+                "v2": 232.400,
+                "v3": 233.600,
+                "l1": 50,
+                "l2": 199,
+                "l3": -218}
+        )
+
+    return Mock(ok=False)
+
+
 def mock_ls110_device(*args, **kwargs):
     if args[0] == 'http://192.1.1.1/d':
         return Mock(ok=False)
@@ -126,6 +176,15 @@ class YoulessAPITest(unittest.TestCase):
         mock_get.assert_any_call('http://192.1.1.1/d', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/f', auth=None, timeout=2)
+
+    @patch('youless_api.gateway.requests.get', side_effect=mock_ls120_reported)
+    def test_device_ls120_reported_issues(self, mock_get: MagicMock):
+        api = YoulessAPI(test_host)
+        api.initialize()
+        api.update()
+
+        self.assertEqual(api.extra_meter.total.value, 75.271)
+        self.assertEqual(api.extra_meter.usage.value, 0)
 
     @patch('youless_api.gateway.requests.get', side_effect=mock_ls120)
     def test_device_ls120_authenticated(self, mock_get: MagicMock):
