@@ -44,7 +44,8 @@ def ls120(host, authentication, device_info):
             return None
 
         return {
-            SensorType.GAS: YoulessSensor(dataset['wtr'], 'm3'),
+            SensorType.GAS: YoulessSensor(dataset['gas'], 'm3'),
+            SensorType.WATER: YoulessSensor(dataset['wtr'], 'm3'),
             SensorType.POWER_USAGE: YoulessSensor(dataset['pwr'], 'W'),
             SensorType.POWER_METER: PowerMeter(
                 YoulessSensor(dataset['p1'], 'kWh'),
