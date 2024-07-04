@@ -102,7 +102,7 @@ class YoulessAPI:
     @property
     def delivery_meter(self) -> Optional[DeliveryMeter]:
         """Get the power delivered values."""
-        return self._cache_data[SensorType.WATER] if SensorType.WATER in self._cache_data else None
+        return self._cache_data[SensorType.DELIVERY_METER] if SensorType.DELIVERY_METER in self._cache_data else None
 
     @property
     def extra_meter(self) -> Optional[ExtraMeter]:

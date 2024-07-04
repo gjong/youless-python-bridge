@@ -172,6 +172,8 @@ class YoulessAPITest(unittest.TestCase):
 
         self.assertEqual(api.extra_meter.total.value, 15.0)
         self.assertEqual(api.extra_meter.usage.value, 10)
+        self.assertEqual(api.delivery_meter.low.value, 0.029)
+        self.assertEqual(api.delivery_meter.high.value, 0.0)
 
         mock_get.assert_any_call('http://192.1.1.1/d', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=None, timeout=2)
