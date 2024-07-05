@@ -1,7 +1,7 @@
 setuptools==69.1.1
 wheel==0.43.0
 twine==5.0.0
-requests==2.31.0
+requests==2.32.2
 
 
 pytest==7.1.3
