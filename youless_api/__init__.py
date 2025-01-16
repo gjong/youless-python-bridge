@@ -2,6 +2,7 @@
 This file contains a helper class to easily obtain data from the YouLess sensor.
 """
 import logging
+from datetime import datetime
 from typing import Optional
 
 from youless_api.const import SensorType
@@ -95,6 +96,11 @@ class YoulessAPI:
         return self._cache_data[SensorType.POWER_USAGE] if SensorType.POWER_USAGE in self._cache_data else None
 
     @property
+    def average_power(self) -> Optional[YoulessSensor]:
+        """Get the average power usage of active Tarif."""
+        return self._cache_data[SensorType.POWER_AVERAGE] if SensorType.POWER_AVERAGE in self._cache_data else None
+
+    @property
     def power_meter(self) -> Optional[PowerMeter]:
         """Get the power meter values."""
         return self._cache_data[SensorType.POWER_METER] if SensorType.POWER_METER in self._cache_data else None
@@ -123,6 +129,16 @@ class YoulessAPI:
     def phase3(self) -> Optional[Phase]:
         """Get the phase 1 information"""
         return self._cache_data[SensorType.PHASE3] if SensorType.PHASE3 in self._cache_data else None
+
+    @property
+    def peak_power(self) -> Optional[YoulessSensor]:
+        """Get the peak power of the month."""
+        return self._cache_data[SensorType.MONTH_PEAK] if SensorType.MONTH_PEAK in self._cache_data else None
+
+    @property
+    def peak_power_time(self) -> Optional[datetime]:
+        """Get the date time of the peak time."""
+        return self._cache_data[SensorType.MONTH_PEAK_TIME] if SensorType.MONTH_PEAK_TIME in self._cache_data else None
 
     @property
     def secured(self) -> bool:
