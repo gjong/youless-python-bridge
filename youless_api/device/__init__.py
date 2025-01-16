@@ -76,7 +76,7 @@ def ls120(host, authentication, device_info):
             SensorType.TARIFF: phase_info['tr'] if phase_info else None,
             SensorType.MONTH_PEAK: YoulessSensor(phase_info['pp'], 'W') if 'pp' in phase_info else None,
             SensorType.POWER_AVERAGE: YoulessSensor(phase_info['pa'], 'W') if 'pa' in phase_info else None,
-            SensorType.MONTH_PEAK_TIME: datetime.strptime(str(phase_info['pts']), '%y%m%d%H%M') if 'pts' in phase_info else None,
+            SensorType.MONTH_PEAK_TIME: datetime.strptime(str(phase_info['pts']), '%y%m%d%H%M') if 'pts' in phase_info and phase_info['pts'] > 0 else None,
         }
 
     return update
