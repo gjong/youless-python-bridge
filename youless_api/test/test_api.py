@@ -80,7 +80,10 @@ def mock_ls120(*args, **kwargs) -> Response:
                 "i2": 0.123,
                 "v3": 240,
                 "l3": 230,
-                "i3": 0.123
+                "i3": 0.123,
+                "pp": 1200,
+                "pts": int(datetime.now().strftime("%y%m%d%H%M")),
+                "pa": 400
             }
         )
 
@@ -179,7 +182,10 @@ class YoulessAPITest(unittest.TestCase):
         self.assertEqual(api.current_power_usage.value, 2382)
         self.assertEqual(api.power_meter.high.value, 4490.631)
         self.assertEqual(api.power_meter.low.value, 4703.562)
-        self.assertEqual(api.power_meter.total.value, 9194.164)
+        self.assertEqual(9194.164, api.power_meter.total.value)
+        self.assertEqual(400, api.average_power.value)
+        self.assertEqual(1200, api.peak_power.value)
+        self.assertEqual(datetime.now().replace(second=0, microsecond=0), api.peak_power_time)
 
         mock_get.assert_any_call('http://192.1.1.1/d', auth=None, timeout=2)
         mock_get.assert_any_call('http://192.1.1.1/e', auth=None, timeout=2)

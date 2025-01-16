@@ -16,3 +16,6 @@ class SensorType(Enum):
     PHASE2 = "phase2"
     PHASE3 = "phase3"
     TARIFF = "tariff"
+    MONTH_PEAK = "month_peak"
+    MONTH_PEAK_TIME = "month_peak_time"
+    POWER_AVERAGE = "power_average"

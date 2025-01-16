@@ -1,3 +1,4 @@
+from datetime import datetime
 from typing import Optional
 
 from youless_api.gateway import fetch_enologic_api, fetch_generic_api, fetch_phase_api
@@ -73,6 +74,9 @@ def ls120(host, authentication, device_info):
                 YoulessSensor(phase_info['v3'], 'V'),
                 YoulessSensor(phase_info['l3'], 'W')) if 'i3' in phase_info else None,
             SensorType.TARIFF: phase_info['tr'] if phase_info else None,
+            SensorType.MONTH_PEAK: YoulessSensor(phase_info['pp'], 'W') if 'pp' in phase_info else None,
+            SensorType.POWER_AVERAGE: YoulessSensor(phase_info['pa'], 'W') if 'pa' in phase_info else None,
+            SensorType.MONTH_PEAK_TIME: datetime.strptime(str(phase_info['pts']), '%y%m%d%H%M') if 'pts' in phase_info and phase_info['pts'] > 0 else None,
         }
 
     return update
