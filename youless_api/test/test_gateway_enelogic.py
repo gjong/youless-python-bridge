@@ -109,6 +109,24 @@ class GatewayTest(TestCase):
         self.assertEqual(dataset['gas'], 1624.264)
         mock_get.assert_called_once_with('http://localhost/e', auth=None, timeout=2)
 
+    @patch('youless_api.gateway.requests.get')
+    def test_enologic_invalid_timestamp_is_stale(self, mock_get: MagicMock):
+        mock_get.return_value = Mock(
+            ok=True,
+            headers={'Content-Type': 'application/json'},
+            json=lambda: [{
+                "gas": 1624.264,
+                "gts": 2613320000,
+                "wtr": 1234.564,
+                "wts": 0
+            }]
+        )
+
+        dataset = fetch_enologic_api('localhost', None)
+
+        self.assertIsNone(dataset['gas'])
+        self.assertEqual(dataset['wtr'], 1234.564)
+
     @patch('youless_api.gateway.requests.get', side_effect=mock_ls120_ok)
     def test_enologic_correct(self, mock_get: MagicMock):
         dataset = fetch_enologic_api('localhost', None)
