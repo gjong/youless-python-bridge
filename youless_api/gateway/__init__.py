@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import requests
@@ -47,15 +47,16 @@ def fetch_enologic_api(host, authentication=None):
                 'ps0': None},
             **response.json()[0]
         }
-        if 'gts' in corrected:
-            formatted_date = datetime.now().strftime("%y%m%d") + "0000"
-            if corrected["gts"] != 0 and int(formatted_date) >= corrected["gts"]:
+
+        if corrected.get("gts") not in (None, 0):
+            gas_timestamp = datetime.strptime(str(corrected['gts']), "%y%m%d%H%M")
+            if datetime.now() - gas_timestamp > timedelta(hours=2):
                 corrected["gas"] = None
 
-        if 'wts' in corrected:
-            formatted_date = datetime.now().strftime("%y%m%d") + "0000"
-            if corrected["wts"] != 0 and int(formatted_date) >= corrected["wts"]:
-                corrected["wtr"] = None
+        if corrected.get("wts") not in (None, 0):
+            water_timestamp = datetime.strptime(str(corrected['wts']), "%y%m%d%H%M")
+            if datetime.now() - water_timestamp > timedelta(hours=2):
+                corrected["wts"] = None
 
         return corrected
 
