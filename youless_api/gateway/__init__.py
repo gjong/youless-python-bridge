@@ -4,6 +4,22 @@ from typing import Optional
 import requests
 
 
+def _is_stale_timestamp(timestamp):
+    if timestamp in (None, 0):
+        return False
+
+    timestamp = str(timestamp)
+    if len(timestamp) != 10 or not timestamp.isdigit():
+        return True
+
+    try:
+        timestamp = datetime.strptime(timestamp, "%y%m%d%H%M")
+    except ValueError:
+        return True
+
+    return datetime.now() - timestamp > timedelta(hours=2)
+
+
 def fetch_generic_api(host, authentication=None) -> Optional[dict]:
     """Fetches the data from the Youless API on the /a endpoint."""
     response = requests.get(f"http://{host}/a?f=j", auth=authentication, timeout=2)
@@ -48,15 +64,11 @@ def fetch_enologic_api(host, authentication=None):
             **response.json()[0]
         }
 
-        if corrected.get("gts") not in (None, 0):
-            gas_timestamp = datetime.strptime(str(corrected['gts']), "%y%m%d%H%M")
-            if datetime.now() - gas_timestamp > timedelta(hours=2):
-                corrected["gas"] = None
+        if _is_stale_timestamp(corrected.get("gts")):
+            corrected["gas"] = None
 
-        if corrected.get("wts") not in (None, 0):
-            water_timestamp = datetime.strptime(str(corrected['wts']), "%y%m%d%H%M")
-            if datetime.now() - water_timestamp > timedelta(hours=2):
-                corrected["wts"] = None
+        if _is_stale_timestamp(corrected.get("wts")):
+            corrected["wtr"] = None
 
         return corrected
 
