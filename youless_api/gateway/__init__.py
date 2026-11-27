@@ -1,7 +1,23 @@
-from datetime import datetime
+from datetime import datetime, timedelta
 from typing import Optional
 
 import requests
+
+
+def _is_stale_timestamp(timestamp):
+    if timestamp in (None, 0):
+        return False
+
+    timestamp = str(timestamp)
+    if len(timestamp) != 10 or not timestamp.isdigit():
+        return True
+
+    try:
+        timestamp = datetime.strptime(timestamp, "%y%m%d%H%M")
+    except ValueError:
+        return True
+
+    return datetime.now() - timestamp > timedelta(hours=2)
 
 
 def fetch_generic_api(host, authentication=None) -> Optional[dict]:
@@ -47,15 +63,12 @@ def fetch_enologic_api(host, authentication=None):
                 'ps0': None},
             **response.json()[0]
         }
-        if 'gts' in corrected:
-            formatted_date = datetime.now().strftime("%y%m%d") + "0000"
-            if corrected["gts"] != 0 and int(formatted_date) >= corrected["gts"]:
-                corrected["gas"] = None
 
-        if 'wts' in corrected:
-            formatted_date = datetime.now().strftime("%y%m%d") + "0000"
-            if corrected["wts"] != 0 and int(formatted_date) >= corrected["wts"]:
-                corrected["wtr"] = None
+        if _is_stale_timestamp(corrected.get("gts")):
+            corrected["gas"] = None
+
+        if _is_stale_timestamp(corrected.get("wts")):
+            corrected["wtr"] = None
 
         return corrected
 
